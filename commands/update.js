@@ -7,6 +7,8 @@ const {
 	updateDoc,
 } = require("firebase/firestore/lite");
 
+const { updateData } = require("../firestore_helper");
+
 const DiscordJS = require("discord.js");
 const NUMBER = DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER;
 const STRING = DiscordJS.Constants.ApplicationCommandOptionTypes.STRING;
@@ -16,12 +18,12 @@ const description = "Updates your scores for each metric";
 const locations = [
 	{ name: "Expedition", value: "Expedition" },
 	{
-		name: "Hetacomb",
-		value: "Hetacomb",
+		name: "Hecatomb",
+		value: "Hecatomb",
 	},
 	{
-		name: "Red Field",
-		value: "Red Field",
+		name: "Red Lake",
+		value: "Red Lake",
 	},
 	{ name: "PVP", value: "PVP" },
 ];
@@ -90,9 +92,11 @@ const init = (interaction, client) => {
 	const revivals = interaction.options.getNumber("revivals");
 	const damage = interaction.options.getNumber("damage");
 
+	const username = interaction.member.user.username;
 	const userId = interaction.member.user.id;
 
 	updateData(
+		username,
 		userId,
 		{
 			location: location,
@@ -105,34 +109,6 @@ const init = (interaction, client) => {
 		},
 		interaction
 	);
-};
-
-const updateData = async (userId, values, interaction) => {
-	console.log(values["location"]);
-	const app = initializeApp(firebaseConfig);
-	const db = getFirestore(app);
-
-	const locationCol = collection(db, values.location);
-	const docs = (await getDocs(locationCol)).docs;
-	var error = false;
-
-	docs.forEach((doc) => {
-		const data = doc.data();
-
-		if (data.value < values[doc.id]) {
-			try {
-				updateDoc(doc.ref, { user_id: userId, value: values[doc.id] });
-			} catch (e) {
-				error = true;
-			}
-		}
-	});
-
-	if (error === true) {
-		interaction.reply("Error updating scores");
-	} else {
-		interaction.reply("Successfully updated <@" + userId + ">'s scores");
-	}
 };
 
 module.exports = { init, description, options };

@@ -55,3 +55,6 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.login(token);
+
+const { initApp } = require("./firestore_helper");
+initApp();
