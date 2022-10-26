@@ -1,12 +1,3 @@
-const { initializeApp } = require("firebase/app");
-const {
-	getDocs,
-	getFirestore,
-	collection,
-	getDoc,
-	updateDoc,
-} = require("firebase/firestore/lite");
-
 const { updateData } = require("../firestore_helper");
 
 const DiscordJS = require("discord.js");
@@ -73,15 +64,6 @@ const options = [
 		type: NUMBER,
 	},
 ];
-
-const firebaseConfig = {
-	apiKey: process.env.API_KEY,
-	authDomain: process.env.AUTH_DOMAIN,
-	projectId: process.env.PROJECT_ID,
-	storageBucket: process.env.STORAGE_BUCKET,
-	messagingSenderId: process.env.MESSAGING_SENDER_ID,
-	appId: process.env.APP_ID,
-};
 
 const init = (interaction, client) => {
 	const location = interaction.options.getString("location");

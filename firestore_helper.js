@@ -170,4 +170,29 @@ const updateData = async (username, userId, values, interaction) => {
 	interaction.reply(message);
 };
 
-module.exports = { initApp, updateData };
+const getHighscores = async (location, interaction) => {
+	var message = "Displaying highscores for **" + location + "**";
+	message += "\n---------------------------------------------";
+
+	const docs = (await getDocs(collections[location])).docs;
+
+	docs.forEach((doc) => {
+		if (doc.id != "Users") {
+			const data = doc.data();
+			message += "\n**" + doc.id + ":**\t";
+
+			if (data.username) {
+				message += data.value;
+				message += " *(" + data.username + ")*";
+			} else {
+				message += "~";
+			}
+		}
+	});
+
+	message += "\n---------------------------------------------";
+
+	interaction.reply(message);
+};
+
+module.exports = { initApp, updateData, getHighscores };
