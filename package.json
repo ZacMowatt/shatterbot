@@ -9,7 +9,7 @@
     "dev:watch": "cross-env NODE_ENV=development NODE_NO_WARNINGS=1 nodemon .",
     "build": "pkg ."
   },
-  "author": "",
+  "author": "Choo",
   "license": "MIT",
   "description": "",
   "dependencies": {
