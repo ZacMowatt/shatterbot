@@ -5,11 +5,17 @@ const {
 	getDocs,
 	getFirestore,
 	collection,
-	getDoc,
 	updateDoc,
-	doc,
 	addDoc,
 } = require("firebase/firestore/lite");
+const {
+	damage,
+	deaths,
+	kills,
+	precision,
+	revivals,
+	score,
+} = require("./bot_responses.js");
 
 const firebaseConfig = {
 	apiKey: process.env.API_KEY,
@@ -170,7 +176,63 @@ const updateData = async (username, userId, values, interaction) => {
 	interaction.reply(message);
 };
 
-const getHighscores = async (location, interaction) => {
+const getHighscores = async (location, interaction, user) => {
+	if (user) {
+		if (user.username === "Shatterbot" && user.bot === true) {
+			highscoresBot(location, interaction);
+		} else {
+			highscoresPersonal(location, user, interaction);
+		}
+	} else {
+		highscoresGlobal(location, interaction);
+	}
+};
+
+const highscoresPersonal = async (location, user, interaction) => {
+	const docs = (await getDocs(collection(db, location + "/Users/users"))).docs;
+	var data;
+	var message;
+
+	docs.forEach((doc) => {
+		if (doc.data().userId == user) {
+			data = doc.data();
+		}
+	});
+
+	if (data) {
+		var message =
+			"Displaying **" +
+			data.username +
+			"'s** personal highscores for **" +
+			location +
+			"**";
+		message += "\n---------------------------------------------";
+		message += rowFormat("damage:", data.damage);
+		message += rowFormat("deaths:", data.deaths);
+		message += rowFormat("kills:", data.kills);
+		message += rowFormat("precision:", data.precision);
+		message += rowFormat("revivals:", data.revivals);
+		message += rowFormat("score:", data.score);
+		message += "\n---------------------------------------------";
+	} else {
+		message =
+			"Unable to find any scores for **" +
+			user.username +
+			"** for **" +
+			location +
+			"**";
+	}
+
+	interaction.reply(message);
+};
+
+const rowFormat = (title, value) => {
+	var message = "\n**" + title + "**\t";
+	message += value ? value : "~";
+	return message;
+};
+
+const highscoresGlobal = async (location, interaction) => {
 	var message = "Displaying highscores for **" + location + "**";
 	message += "\n---------------------------------------------";
 
@@ -190,6 +252,39 @@ const getHighscores = async (location, interaction) => {
 		}
 	});
 
+	message += "\n---------------------------------------------";
+
+	interaction.reply(message);
+};
+
+const highscoresBot = (location, interaction) => {
+	var message =
+		"Displaying **Shatterbot's** personal highscores for **" + location + "**";
+	message += "\n---------------------------------------------";
+	message += rowFormat(
+		"damage:",
+		damage[Math.floor(Math.random() * damage.length)]
+	);
+	message += rowFormat(
+		"deaths:",
+		deaths[Math.floor(Math.random() * deaths.length)]
+	);
+	message += rowFormat(
+		"kills:",
+		kills[Math.floor(Math.random() * kills.length)]
+	);
+	message += rowFormat(
+		"precision:",
+		precision[Math.floor(Math.random() * precision.length)]
+	);
+	message += rowFormat(
+		"revivals:",
+		revivals[Math.floor(Math.random() * revivals.length)]
+	);
+	message += rowFormat(
+		"score:",
+		score[Math.floor(Math.random() * score.length)]
+	);
 	message += "\n---------------------------------------------";
 
 	interaction.reply(message);
