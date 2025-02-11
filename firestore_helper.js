@@ -8,7 +8,9 @@ const {
 	collection,
 	updateDoc,
 	addDoc,
-} = require("firebase/firestore/lite");
+	doc,
+	setDoc,
+} = require("firebase/firestore");
 const {
 	damage,
 	deaths,
@@ -35,10 +37,33 @@ var collections = [];
 const initApp = () => {
 	app = initializeApp(firebaseConfig);
 	db = getFirestore(app);
+	updateLocations();
+
+	collections["Border Control"] = collection(db, "Border Control");
+	collections["Cyber Trail"] = collection(db, "Cyber Trail");
 	collections["Expedition"] = collection(db, "Expedition");
 	collections["Hecatomb"] = collection(db, "Hecatomb");
-	collections["Red Lake"] = collection(db, "Red Lake");
 	collections["PVP"] = collection(db, "PVP");
+	collections["Red Lake"] = collection(db, "Red Lake");
+	collections["Sunken Lab"] = collection(db, "Sunken Lab");
+	collections["Border Control_V1"] = collection(db, "Border Control_V1");
+	collections["Cyber Trail_V1"] = collection(db, "Cyber Trail_V1");
+	collections["Expedition_V1"] = collection(db, "Expedition_V1");
+	collections["Hecatomb_V1"] = collection(db, "Hecatomb_V1");
+	collections["PVP_V1"] = collection(db, "PVP_V1");
+	collections["Red Lake_V1"] = collection(db, "Red Lake_V1");
+	collections["Sunken Lab_V1"] = collection(db, "Sunken Lab_V1");
+	collections["Portal_V1"] = collection(db, "Portal_V1");
+	collections["Stormbringer_V1"] = collection(db, "Stormbringer_V1");
+	collections["Quicksand_V1"] = collection(db, "Quicksand_V1");
+	collections["Hephaestus_V1"] = collection(db, "Hephaestus_V1");
+	collections["Twin Stilts_V1"] = collection(db, "Twin Stilts_V1");
+	collections["Bastion_V1"] = collection(db, "Bastion_V1");
+	collections["Backstab_V1"] = collection(db, "Backstab_V1");
+	collections["The Escape_V1"] = collection(db, "The Escape_V1");
+	collections["Inside-Out_V1"] = collection(db, "Inside-Out_V1");
+	collections["Liberty_V1"] = collection(db, "Liberty_V1");
+
 	console.log("App initilised");
 };
 
@@ -229,7 +254,7 @@ const highscoresPersonal = async (location, user, interaction) => {
 			message += rowFormat("gears:", data.gears);
 		message += rowFormat("kills:", data.kills);
 		if (!location.contains("Expedition"))
-		message += rowFormat("precision:", data.precision);
+			message += rowFormat("precision:", data.precision);
 		message += rowFormat("revivals:", data.revivals);
 		message += rowFormat("score:", data.score);
 		message += "\n---------------------------------------------";
@@ -297,7 +322,7 @@ const highscoresBot = (location, interaction) => {
 		message += rowFormat(
 			"gears:",
 			gears[Math.floor(Math.random() * gears.length)]
-	);
+		);
 	message += rowFormat(
 		"kills:",
 		kills[Math.floor(Math.random() * kills.length)]
@@ -318,5 +343,46 @@ const highscoresBot = (location, interaction) => {
 
 	interaction.reply(message);
 };
+
+/// Helper for adding new locations to firestore
+const newLocations = [];
+
+const templateData = {
+	userId: "",
+	username: "",
+	value: 0,
+};
+
+async function updateLocations() {
+	for (const location of newLocations) {
+		console.log("creating location: " + location);
+
+		var docRef = doc(db, location, "Users");
+		await setDoc(docRef, {});
+
+		var docRef = doc(db, location, "Users/users/0");
+		await setDoc(docRef, {});
+
+		var docRef = doc(db, location, "damage");
+		await setDoc(docRef, templateData);
+
+		docRef = doc(db, location, "deaths");
+		await setDoc(docRef, templateData);
+
+		docRef = doc(db, location, "kills");
+		await setDoc(docRef, templateData);
+
+		docRef = doc(db, location, "precision");
+		await setDoc(docRef, templateData);
+
+		docRef = doc(db, location, "revivals");
+		await setDoc(docRef, templateData);
+
+		docRef = doc(db, location, "score");
+		await setDoc(docRef, templateData);
+	}
+}
+
+/// End helper
 
 module.exports = { initApp, updateData, getHighscores };
