@@ -8,6 +8,12 @@ const deaths = [
 	"I'm offended you're even asking",
 	"Less than yours..",
 ];
+const gears = [
+	"I’ve got more gears than a broken watch!",
+	"I have more gears than an overclocked blender.",
+	"My gears are so smooth, they could make a tank do a ballet.",
+	"Gears? Nah, I call them my victory wheels!",
+];
 const kills = [
 	"I lost count after 420",
 	"Kills don't matter... It's damage that counts.. >:(",
@@ -16,11 +22,11 @@ const kills = [
 const precision = [
 	"100%",
 	"0 (Leg meta is where it's at)",
-	"5. Lower is better right..?",
+	"5, Lower is better right..?",
 ];
 const revivals = [
 	"Wayyy too many..",
-	"1 (had a good team for once)",
+	"0 (had a good team for once)",
 	"17 (was all Choobarker..)",
 ];
 const score = [
@@ -29,4 +35,4 @@ const score = [
 	"Forgot to look",
 ];
 
-module.exports = { damage, deaths, kills, precision, revivals, score };
+module.exports = { damage, deaths, gears, kills, precision, revivals, score };

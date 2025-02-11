@@ -12,6 +12,7 @@ const {
 const {
 	damage,
 	deaths,
+	gears,
 	kills,
 	precision,
 	revivals,
@@ -90,26 +91,37 @@ const updateData = async (username, userId, values, interaction) => {
 		// User already has scores for this location
 		var toUpdate = {};
 		const data = userDoc.data();
+
 		if (data.damage < values["damage"]) {
 			toUpdate["damage"] = values["damage"];
 			userMetrics.push("damage" + " *(" + values["damage"] + ")*");
 		}
+
 		if (data.deaths < values["deaths"]) {
 			toUpdate["deaths"] = values["deaths"];
 			userMetrics.push("deaths" + " *(" + values["deaths"] + ")*");
 		}
+
+		if (data.gears < values["gears"]) {
+			toUpdate["gears"] = values["gears"];
+			userMetrics.push("gears" + " *(" + values["gears"] + ")*");
+		}
+
 		if (data.kills < values["kills"]) {
 			toUpdate["kills"] = values["kills"];
 			userMetrics.push("kills" + " *(" + values["kills"] + ")*");
 		}
+
 		if (data.precision < values["precision"]) {
 			toUpdate["precision"] = values["precision"];
 			userMetrics.push("precision" + " *(" + values["precision"] + ")*");
 		}
+
 		if (data.revivals < values["revivals"]) {
 			toUpdate["revivals"] = values["revivals"];
 			userMetrics.push("revivals" + " *(" + values["revivals"] + ")*");
 		}
+
 		if (data.score < values["score"]) {
 			toUpdate["score"] = values["score"];
 			userMetrics.push("score" + " *(" + values["score"] + ")*");
@@ -213,7 +225,10 @@ const highscoresPersonal = async (location, user, interaction) => {
 		message += "\n---------------------------------------------";
 		message += rowFormat("damage:", data.damage);
 		message += rowFormat("deaths:", data.deaths);
+		if (location.contains("Expedition"))
+			message += rowFormat("gears:", data.gears);
 		message += rowFormat("kills:", data.kills);
+		if (!location.contains("Expedition"))
 		message += rowFormat("precision:", data.precision);
 		message += rowFormat("revivals:", data.revivals);
 		message += rowFormat("score:", data.score);
@@ -223,7 +238,7 @@ const highscoresPersonal = async (location, user, interaction) => {
 			"Unable to find any scores for **" +
 			user.username +
 			"** for **" +
-			location +
+			locationManager.locationDisplayName(location) +
 			"**";
 	}
 
@@ -277,6 +292,11 @@ const highscoresBot = (location, interaction) => {
 	message += rowFormat(
 		"deaths:",
 		deaths[Math.floor(Math.random() * deaths.length)]
+	);
+	if (location.contains("Expedition"))
+		message += rowFormat(
+			"gears:",
+			gears[Math.floor(Math.random() * gears.length)]
 	);
 	message += rowFormat(
 		"kills:",
