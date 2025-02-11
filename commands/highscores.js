@@ -1,4 +1,5 @@
 const { updateData, getHighscores } = require("../firestore_helper");
+const { locationManager } = require("../locations");
 
 const DiscordJS = require("discord.js");
 const NUMBER = DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER;
@@ -7,25 +8,12 @@ const USER = DiscordJS.Constants.ApplicationCommandOptionTypes.USER;
 
 const description = "View the recorded highscores for a given location";
 
-const locations = [
-	{ name: "Expedition", value: "Expedition" },
-	{
-		name: "Hecatomb",
-		value: "Hecatomb",
-	},
-	{
-		name: "Red Lake",
-		value: "Red Lake",
-	},
-	{ name: "PVP", value: "PVP" },
-];
-
 const options = [
 	{
 		name: "location",
 		description: "Location",
 		required: true,
-		choices: locations,
+		choices: locationManager.readableLocations,
 		type: STRING,
 	},
 	{

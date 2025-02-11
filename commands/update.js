@@ -1,4 +1,5 @@
 const { updateData } = require("../firestore_helper");
+const { locationManager } = require("../locations");
 
 const DiscordJS = require("discord.js");
 const NUMBER = DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER;
@@ -6,25 +7,12 @@ const STRING = DiscordJS.Constants.ApplicationCommandOptionTypes.STRING;
 
 const description = "Updates your scores for each metric";
 
-const locations = [
-	{ name: "Expedition", value: "Expedition" },
-	{
-		name: "Hecatomb",
-		value: "Hecatomb",
-	},
-	{
-		name: "Red Lake",
-		value: "Red Lake",
-	},
-	{ name: "PVP", value: "PVP" },
-];
-
 const options = [
 	{
 		name: "location",
 		description: "Gamemode",
 		required: true,
-		choices: locations,
+		choices: locationManager.updatableLocations,
 		type: STRING,
 	},
 	{
@@ -63,6 +51,12 @@ const options = [
 		required: false,
 		type: NUMBER,
 	},
+	{
+		name: "gears",
+		description: "Expedition-only metric",
+		required: false,
+		type: NUMBER,
+	},
 ];
 
 const init = (interaction, client) => {
@@ -73,6 +67,7 @@ const init = (interaction, client) => {
 	const precision = interaction.options.getNumber("precision");
 	const revivals = interaction.options.getNumber("revivals");
 	const damage = interaction.options.getNumber("damage");
+	const gears = interaction.options.getNumber("gears");
 
 	const username = interaction.member.user.username;
 	const userId = interaction.member.user.id;
@@ -88,6 +83,7 @@ const init = (interaction, client) => {
 			precision: precision,
 			revivals: revivals,
 			damage: damage,
+			gears: gears,
 		},
 		interaction
 	);

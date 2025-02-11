@@ -1,3 +1,4 @@
+const { locationManager } = require("./locations.js");
 const { PermissionFlagsBits } = require("discord-api-types/v10");
 const { Util } = require("discord.js");
 const { initializeApp } = require("firebase/app");
@@ -128,7 +129,7 @@ const updateData = async (username, userId, values, interaction) => {
 				"<@" +
 				userId +
 				"> now leads the scoreboard for **" +
-				values.location +
+				locationManager.locationDisplayName(values.location) +
 				"** in: **" +
 				locationMetrics.join("**, **") +
 				"**";
@@ -152,7 +153,10 @@ const updateData = async (username, userId, values, interaction) => {
 			}
 			message += " beat their personal record ";
 			if (!hs) {
-				message += "for **" + values.location + "** ";
+				message +=
+					"for **" +
+					locationManager.locationDisplayName(values.location) +
+					"** ";
 			}
 			message += "in: **" + newPersonal.join("**, **") + "**";
 		} else if (firstEntry) {
@@ -163,7 +167,7 @@ const updateData = async (username, userId, values, interaction) => {
 				"Setting " +
 				username +
 				"'s first personal scores for **" +
-				values.location +
+				locationManager.locationDisplayName(values.location) +
 				"**";
 		}
 
@@ -204,7 +208,7 @@ const highscoresPersonal = async (location, user, interaction) => {
 			"Displaying **" +
 			data.username +
 			"'s** personal highscores for **" +
-			location +
+			locationManager.locationDisplayName(location) +
 			"**";
 		message += "\n---------------------------------------------";
 		message += rowFormat("damage:", data.damage);
@@ -233,7 +237,10 @@ const rowFormat = (title, value) => {
 };
 
 const highscoresGlobal = async (location, interaction) => {
-	var message = "Displaying highscores for **" + location + "**";
+	var message =
+		"Displaying highscores for **" +
+		locationManager.locationDisplayName(location) +
+		"**";
 	message += "\n---------------------------------------------";
 
 	const docs = (await getDocs(collections[location])).docs;
@@ -259,7 +266,9 @@ const highscoresGlobal = async (location, interaction) => {
 
 const highscoresBot = (location, interaction) => {
 	var message =
-		"Displaying **Shatterbot's** personal highscores for **" + location + "**";
+		"Displaying **Shatterbot's** personal highscores for **" +
+		locationManager.locationDisplayName(location) +
+		"**";
 	message += "\n---------------------------------------------";
 	message += rowFormat(
 		"damage:",
